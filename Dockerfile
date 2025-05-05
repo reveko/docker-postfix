@@ -7,7 +7,7 @@
 #
 # - use Alpine if you're strapped for space. But beware it uses MUSL LIBC, so unicode support might be an issue.
 # - use Debian if you're interested in the greatest cross-platform compatibility. It is larger than Alpine, though.
-# - use Ubuntu if, well, Ubuntu is your thing and you're used to Ubuntu ecosystem.
+# - use Ubuntu if, well, Ubuntu is your thing and you're used to the buntu ecosystem.
 ARG BASE_IMAGE=debian:bookworm-slim
 
 FROM ${BASE_IMAGE} AS build-scripts
@@ -32,10 +32,8 @@ FROM base AS sasl
 
 ARG TARGETPLATFORM
 ARG SASL_XOAUTH2_REPO_URL=https://github.com/tarickb/sasl-xoauth2.git
-ARG SASL_XOAUTH2_GIT_REF=release-0.24
+ARG SASL_XOAUTH2_GIT_REF=release-0.25
 
-#           --mount=type=cache,target=/var/cache/apk,sharing=locked,id=var-cache-apk-$TARGETPLATFORM \
-#           --mount=type=cache,target=/etc/apk/cache,sharing=locked,id=etc-apk-cache-$TARGETPLATFORM \
 RUN        --mount=type=cache,target=/var/cache/apt,sharing=locked,id=var-cache-apt-$TARGETPLATFORM \
            --mount=type=cache,target=/var/lib/apt,sharing=locked,id=var-lib-apt-$TARGETPLATFORM \
            --mount=type=tmpfs,target=/etc/apk/cache \
@@ -43,7 +41,7 @@ RUN        --mount=type=cache,target=/var/cache/apt,sharing=locked,id=var-cache-
            --mount=type=tmpfs,target=/tmp \
            --mount=type=tmpfs,target=/sasl-xoauth2 \
            --mount=type=bind,from=build-scripts,source=/build-scripts,target=/build-scripts \
-           sh /build-scripts/sasl-build.sh
+           bash /build-scripts/sasl-build.sh
 
 # ============================ Prepare main image ============================
 FROM sasl

@@ -51,8 +51,6 @@ jobs:
           tags: |
             boky/postfix-exporter:latest
             boky/postfix-exporter:edge
-          # boky/postfix-exporter:${{ env.RELEASE_VERSION }}
-          # boky/postfix-exporter:${{ env.RELEASE_VERSION_NO_v }}
 
   Build_Alpine:
     runs-on: ubuntu-latest
@@ -86,7 +84,7 @@ jobs:
 
       - name: Fix issue with building Alpine # See https://gitlab.alpinelinux.org/alpine/aports/-/issues/12406
         run: |
-          update-binfmts --enable
+          if command -v update-binfmts; then update-binfmts --enable; fi
 
       - name: Build and push Alpine
         uses: docker/build-push-action@v6
@@ -153,7 +151,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache/ubuntu,mode=max,compression=estargz
           cache-to: type=local,dest=/tmp/.buildx-cache-new/ubuntu
           build-args: |
-            BASE_IMAGE=ubuntu:jammy
+            BASE_IMAGE=ubuntu:noble
 
       - name: Move cache
         run: |
